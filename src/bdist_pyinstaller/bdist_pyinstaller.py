@@ -62,7 +62,7 @@ def fqn_name(p, f):
 
 
 def is_namespace(pkg):
-    return hasattr(module, "__path__") and getattr(module, "__file__", None) is None
+    return hasattr(pkg, "__path__") and getattr(pkg, "__file__", None) is None
 
 class PyInstalerCmd(Command):
     """
