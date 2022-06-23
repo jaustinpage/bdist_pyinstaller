@@ -390,11 +390,7 @@ if __name__ == "__main__":
                 except:
                     log.error(f"It was not possible to import: {package_name}")
                     continue
-                    
-                if hasattr(_package_, "__path__") and getattr(_package_, "__file__", None) is None:
-                    # namespace package, skip
-                    continue
-                    
+
                 PACKAGE__ROOT = os.path.join(os.path.dirname(_package_.__file__))
                 for root, dirs, files in os.walk(PACKAGE__ROOT):
                     for _file_ in files:
