@@ -61,6 +61,9 @@ def fqn_name(p, f):
     return "{}.{}".format(p, f).replace(".", "_")
 
 
+def is_namespace(pkg):
+    return hasattr(module, "__path__") and getattr(module, "__file__", None) is None
+
 class PyInstalerCmd(Command):
     """
     Extends build command to build a single pyinstaller binary with the dispatcher based on the exec image name.
@@ -193,6 +196,10 @@ class PyInstalerCmd(Command):
 
         package_imports.update(self.distribution.packages)
         sample_import_module = self.distribution.packages[0]
+        for p in self.distribution.packages:
+            if not is_namespace(p):
+                sample_import_module = p
+                break
 
         with open(PYINSTALLER_DISPATCHER, "w") as pyinstaller_dispatcher_fl:
             # license preamble
@@ -389,6 +396,9 @@ if __name__ == "__main__":
                     _package_ = importlib.import_module(package_name)
                 except:
                     log.error(f"It was not possible to import: {package_name}")
+                    continue
+
+                if is_namespace(_package_):
                     continue
 
                 PACKAGE__ROOT = os.path.join(os.path.dirname(_package_.__file__))
